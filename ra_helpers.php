@@ -36,8 +36,11 @@ function or_ra_convert_internal_link($matches) {
 function or_ra_content($text) {
   global $or_ra_redirections;
   $or_ra_redirections = or_ra_redirections();
-  $pattern = '/(href|src)=[\"\']([^\"\']+)[\"\']/im';
-  return preg_replace_callback($pattern, 'or_ra_convert_internal_link', $text);
+  if (count($or_ra_redirections)>0) {
+    $pattern = '/(href|src)=[\"\']([^\"\']+)[\"\']/im';
+    return preg_replace_callback($pattern, 'or_ra_convert_internal_link', $text);
+  }
+  else return $text;
 }
 
 add_filter('the_content', 'or_ra_content', 100);
