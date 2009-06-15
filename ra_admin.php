@@ -16,10 +16,10 @@ function or_ra_show_row($indice) {
   ?>
   <tr>
     <td nowrap="nowrap">
-      <input type="text" name="ra_url<?php echo $indice;?>" value="<?php echo get_option("ra_url${indice}"); ?>"/>
+      <input type="text" size="50" name="ra_url<?php echo $indice;?>" value="<?php echo get_option("ra_url${indice}"); ?>"/>
     </td>
     <td width="100%">
-      <input type="text" name="ra_redirect<?php echo $indice;?>" value="<?php echo get_option("ra_redirect${indice}"); ?>"/>
+      <input type="text" size="50" name="ra_redirect<?php echo $indice;?>" value="<?php echo get_option("ra_redirect${indice}"); ?>"/>
     </td>
   </tr>
   <?php
