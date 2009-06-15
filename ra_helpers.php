@@ -9,13 +9,15 @@ function or_ra_redirections() {
       $value = trim(get_option("ra_redirect${i}"));
       if (!empty($value)) {
         $redirections[$key] = $value;
+        $local_url = preg_replace("|(https?://[^/]+)|i", "", $key);
+
         // we replace local url
-        $key = preg_replace("|(https?://[^/]+)|i", "", $key);
-        if (!empty($key)) {
-          $redirections[$key] = $value;
-          // and full url
-          $key = get_bloginfo("url"). "/".preg_replace("|^[/]+|", "", $key);
-          $redirections[$key] = $value;
+        if (!empty($local_url) && preg_match("|^https?:|i", $key)) $redirections[$local_url] = $value;
+        
+        // and full url
+        if (!empty($local_url) && $local_url[0] != '.') {
+          $full_url = get_bloginfo("url"). "/".preg_replace("|^[/]+|", "", $local_url);
+          if ($full_url != $key) $redirections[$full_url] = $value;
         }
       }
     }
@@ -26,7 +28,7 @@ function or_ra_redirections() {
 function or_ra_convert_internal_link($matches) {
   global $or_ra_redirections;
   foreach ($or_ra_redirections as $key => $value) {
-    if (stripos($matches[0], $key)>0) {
+    if (stripos($matches[2], $key) === 0) {
       return str_replace($key, $value, $matches[0]);
     }
   }
@@ -36,6 +38,7 @@ function or_ra_convert_internal_link($matches) {
 function or_ra_content($text) {
   global $or_ra_redirections;
   $or_ra_redirections = or_ra_redirections();
+  echo var_export($or_ra_redirections);
   if (count($or_ra_redirections)>0) {
     $pattern = '/(href|src)=[\"\']([^\"\']+)[\"\']/im';
     return preg_replace_callback($pattern, 'or_ra_convert_internal_link', $text);
