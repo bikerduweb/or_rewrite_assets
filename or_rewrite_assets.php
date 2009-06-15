@@ -8,6 +8,8 @@
   Author URI: http://www.veilleperso.com
 */
 
+if (!defined('OR_RA_REDIRECT_NUMBER')) define('OR_RA_REDIRECT_NUMBER', 9);
+
 $ra_include_path = dirname(__FILE__);
 set_include_path( $ra_include_path . PATH_SEPARATOR . get_include_path() );
 require_once 'ra_admin.php';

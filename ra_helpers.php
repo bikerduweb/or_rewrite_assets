@@ -2,7 +2,7 @@
 
 function or_ra_redirections() {
   $redirections = array();
-  for ($i=1; $i<=3; $i+=1) {
+  for ($i=1; $i<=9; $i+=1) {
     $key = trim(get_option("ra_url${i}"));
     $key = preg_replace("|([/]+)$|", "", $key);
     if (!empty($key)) {

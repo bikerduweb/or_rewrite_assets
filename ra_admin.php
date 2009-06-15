@@ -4,12 +4,10 @@ add_action('admin_menu', 'or_ra_options_page');
 add_action('admin_init', 'or_ra_register_settings');
 
 function or_ra_register_settings() {
-  register_setting('or_rewrite_assets', 'ra_url1');
-  register_setting('or_rewrite_assets', 'ra_redirect1');
-  register_setting('or_rewrite_assets', 'ra_url2');
-  register_setting('or_rewrite_assets', 'ra_redirect2');
-  register_setting('or_rewrite_assets', 'ra_url3');
-  register_setting('or_rewrite_assets', 'ra_redirect3');
+  for ($i=1; $i<=OR_RA_REDIRECT_NUMBER; $i+=1) {
+    register_setting('or_rewrite_assets', "ra_url${i}");
+    register_setting('or_rewrite_assets', "ra_redirect${i}");
+  }
 }
 
 function or_ra_show_row($indice) {
@@ -52,9 +50,7 @@ function or_ra_options_subpanel() {
           <th><?php _e("Replaced by url") ?></th>
         </tr>
         <?php
-        or_ra_show_row(1);
-        or_ra_show_row(2);
-        or_ra_show_row(3);
+        for ($i=1; $i<=OR_RA_REDIRECT_NUMBER; $i+=1) or_ra_show_row($i);
         ?>
       </table>
     <?php or_ra_show_submit() ?>
