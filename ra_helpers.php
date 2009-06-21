@@ -34,10 +34,23 @@ function or_ra_convert_internal_link($matches) {
   }
   return $matches[0];
 }
-	
+
+function or_ra_url($url) {
+  global $or_ra_redirections;
+  if ($or_ra_redirections === false) $or_ra_redirections = or_ra_redirections();
+  if (count($or_ra_redirections)>0) {
+    foreach ($or_ra_redirections as $key => $value) {
+      if (stripos($url, $key) === 0) {
+        return str_replace($key, $value, $matches[0]);
+      }
+    }
+  }
+  return $url;
+}
+
 function or_ra_content($text) {
   global $or_ra_redirections;
-  $or_ra_redirections = or_ra_redirections();
+  if ($or_ra_redirections === false) $or_ra_redirections = or_ra_redirections();
   if (count($or_ra_redirections)>0) {
     $pattern = '/(href|src)=[\"\']([^\"\']+)[\"\']/im';
     return preg_replace_callback($pattern, 'or_ra_convert_internal_link', $text);
