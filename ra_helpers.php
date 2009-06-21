@@ -2,7 +2,7 @@
 
 function or_ra_redirections() {
   $redirections = array();
-  for ($i=1; $i<=9; $i+=1) {
+  for ($i=1; $i<=OR_RA_REDIRECT_NUMBER; $i+=1) {
     $key = trim(get_option("ra_url${i}"));
     $key = preg_replace("|([/]+)$|", "", $key);
     if (!empty($key)) {
@@ -37,11 +37,11 @@ function or_ra_convert_internal_link($matches) {
 
 function or_ra_url($url) {
   global $or_ra_redirections;
-  if ($or_ra_redirections === false) $or_ra_redirections = or_ra_redirections();
+  if (!is_array($or_ra_redirections)) $or_ra_redirections = or_ra_redirections();
   if (count($or_ra_redirections)>0) {
     foreach ($or_ra_redirections as $key => $value) {
       if (stripos($url, $key) === 0) {
-        return str_replace($key, $value, $matches[0]);
+        return str_replace($key, $value, $url);
       }
     }
   }
@@ -50,7 +50,7 @@ function or_ra_url($url) {
 
 function or_ra_content($text) {
   global $or_ra_redirections;
-  if ($or_ra_redirections === false) $or_ra_redirections = or_ra_redirections();
+  if (!is_array($or_ra_redirections)) $or_ra_redirections = or_ra_redirections();
   if (count($or_ra_redirections)>0) {
     $pattern = '/(href|src)=[\"\']([^\"\']+)[\"\']/im';
     return preg_replace_callback($pattern, 'or_ra_convert_internal_link', $text);
@@ -60,4 +60,5 @@ function or_ra_content($text) {
 
 add_filter('the_content', 'or_ra_content', 100);
 add_filter('the_excerpt', 'or_ra_content', 100);
+add_filter('or_ra_rewrite_url', 'or_ra_url');
 ?>
