@@ -1,5 +1,14 @@
 <?php
 
+function or_hashed_url($new, $url) {
+  ob_end_flush();
+  if (stripos($new, "%d")>0) {
+    $hash = crc32($url) % 4;
+    return sprintf($new, $hash);
+  }
+  else return $new;
+}
+
 function or_ra_redirections() {
   $redirections = array();
   for ($i=1; $i<=OR_RA_REDIRECT_NUMBER; $i+=1) {
@@ -29,7 +38,7 @@ function or_ra_convert_internal_link($matches) {
   global $or_ra_redirections;
   foreach ($or_ra_redirections as $key => $value) {
     if (stripos($matches[2], $key) === 0) {
-      return str_replace($key, $value, $matches[0]);
+      return str_replace($key, or_hashed_url($value, $matches[2]), $matches[0]);
     }
   }
   return $matches[0];
@@ -41,7 +50,7 @@ function or_ra_url($url) {
   if (count($or_ra_redirections)>0) {
     foreach ($or_ra_redirections as $key => $value) {
       if (stripos($url, $key) === 0) {
-        return str_replace($key, $value, $url);
+        return str_replace($key, or_hashed_url($value, $url), $url);
       }
     }
   }
